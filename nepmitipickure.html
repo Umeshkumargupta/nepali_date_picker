@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BS Date Picker</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 50px;
+    }
+
+    input[type="miti"] {
+      padding: 8px;
+      width: 200px;
+      font-size: 16px;
+    }
+
+    .calendar-popup {
+      display: none;
+      position: absolute;
+      top: 60px;
+      left: 50px;
+      z-index: 1000;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .calendar-popup header {
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .weeks, .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .weeks li, .days li {
+      list-style: none;
+      text-align: center;
+    }
+
+    .weeks li {
+      font-weight: bold;
+    }
+
+    .days li {
+  background: #f0f0f0;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 5px;
+  position: relative;
+  font-size: 10px; /* 👈 Smallest font size */
+}
+
+
+    .days li:hover {
+      background: #4caf50;
+      color: white;
+    }
+
+    .days li sub {
+      position: absolute;
+      bottom: 2px;
+      right: 4px;
+      font-size: 1px;
+      color: #333;
+    }
+
+    .controls {
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .controls button {
+      margin: 0 5px;
+      padding: 5px 10px;
+    }
+  </style>
+</head>
+<body>
+
+
+<label for="fmiti">Select Miti:</label>
+<input type="miti" id="fmiti">
+
+
+<div class="calendar-popup" id="calendarPopup">
+  <header id="bsHeader"></header>
+  <ul class="weeks">
+    <li>Sun</li><li>Mon</li><li>Tue</li><li>Wed</li><li>Thu</li><li>Fri</li><li>Sat</li>
+  </ul>
+  <ul class="days" id="calendarDays"></ul>
+  <div class="controls">
+    <button onclick="prevMonth()">◀ Prev</button>
+    <button onclick="nextMonth()">Next ▶</button>
+  </div>
+</div>
+
+<script>
+  const mcm = [
+    { SYS_BS_MTH: "2081-01", SYS_AD_DATE: "2024-04-13", DAYS_NO: 31 },
+    { SYS_BS_MTH: "2081-02", SYS_AD_DATE: "2024-05-14", DAYS_NO: 31 },
+    { SYS_BS_MTH: "2081-03", SYS_AD_DATE: "2024-06-14", DAYS_NO: 32 },
+    { SYS_BS_MTH: "2081-04", SYS_AD_DATE: "2024-07-16", DAYS_NO: 31 },
+    { SYS_BS_MTH: "2081-05", SYS_AD_DATE: "2024-08-17", DAYS_NO: 31 },
+    { SYS_BS_MTH: "2081-06", SYS_AD_DATE: "2024-09-17", DAYS_NO: 30 }
+  ];
+
+  function miti(adDate) {
+    for (let i = 0; i < mcm.length; i++) {
+      let bsMonth = mcm[i];
+      let bsStartDate = new Date(bsMonth.SYS_AD_DATE);
+      let bsDays = bsMonth.DAYS_NO;
+      let bsStartParts = bsMonth.SYS_BS_MTH.split("-");
+      let bsYear = parseInt(bsStartParts[0]);
+      let bsMonthNo = parseInt(bsStartParts[1]);
+
+      let diff = Math.floor((adDate - bsStartDate) / (1000 * 60 * 60 * 24));
+      if (diff >= 0 && diff < bsDays) {
+        let bsDay = diff + 1;
+        return `${bsYear}-${String(bsMonthNo).padStart(2, '0')}-${String(bsDay).padStart(2, '0')}`;
+      }
+    }
+    return "Unknown";
+  }
+
+  let currentYear = 2081;
+  let currentMonth = 1;
+
+  function renderCalendar(year, month) {
+    const daysTag = document.getElementById("calendarDays");
+    const bsHeader = document.getElementById("bsHeader");
+
+    let bsMonthKey = `${year}-${String(month).padStart(2, '0')}`;
+    let bsData = mcm.find(item => item.SYS_BS_MTH === bsMonthKey);
+    if (!bsData) {
+      daysTag.innerHTML = "<li colspan='7'>No data</li>";
+      return;
+    }
+
+    let startADDate = new Date(bsData.SYS_AD_DATE);
+    let daysInMonth = bsData.DAYS_NO;
+    let firstDayOfWeek = startADDate.getDay();
+
+    bsHeader.innerText = `B.S. ${bsMonthKey}`;
+
+    let liTag = "";
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      liTag += `<li></li>`;
+    }
+
+    for (let i = 0; i < daysInMonth; i++) {
+      let adDate = new Date(startADDate);
+      adDate.setDate(adDate.getDate() + i);
+
+      let bsMiti = miti(adDate);
+      liTag += `<li onclick="selectDate('${bsMiti}')">
+                  ${bsMiti.split("-")[2]} <sub>${adDate.getDate()}</sub>
+                </li>`;
+    }
+
+    daysTag.innerHTML = liTag;
+  }
+
+  function nextMonth() {
+    currentMonth++;
+    if (!mcm.find(item => item.SYS_BS_MTH === `${currentYear}-${String(currentMonth).padStart(2, '0')}`)) {
+      currentMonth--;
+      return;
+    }
+    renderCalendar(currentYear, currentMonth);
+  }
+
+  function prevMonth() {
+    currentMonth--;
+    if (!mcm.find(item => item.SYS_BS_MTH === `${currentYear}-${String(currentMonth).padStart(2, '0')}`)) {
+      currentMonth++;
+      return;
+    }
+    renderCalendar(currentYear, currentMonth);
+  }
+
+  function selectDate(bsDate) {
+    document.getElementById("fmiti").value = bsDate;
+    document.getElementById("calendarPopup").style.display = "none";
+  }
+
+  document.getElementById("fmiti").addEventListener("click", function () {
+    let popup = document.getElementById("calendarPopup");
+    popup.style.display = "block";
+    renderCalendar(currentYear, currentMonth);
+  });
+
+  // Click outside to close
+  window.addEventListener("click", function(e) {
+    if (!document.getElementById("calendarPopup").contains(e.target) &&
+        e.target.id !== "fmiti") {
+      document.getElementById("calendarPopup").style.display = "none";
+    }
+  });
+</script>
+
+</body>
+</html>
