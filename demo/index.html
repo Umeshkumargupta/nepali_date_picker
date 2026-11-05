@@ -1,1 +1,153 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nepali Date Picker Demo</title>
+
+    <!-- Nepali Date Picker CSS -->
+    <link rel="stylesheet"
+        href="../dist/nepali-date-picker.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            padding: 40px 15px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px #0001;
+        }
+
+        h2 {
+            color: #174a8b;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccd5e1;
+            border-radius: 7px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 16px;
+            margin-top: 12px;
+            border: none;
+            border-radius: 6px;
+            background: #174a8b;
+            color: white;
+            cursor: pointer;
+        }
+
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f1f7ff;
+            border-radius: 7px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Nepali Date Picker Demo</h2>
+
+    <label>AD Date</label>
+    <input type="text" id="ADDATE"
+        placeholder="Select Nepali date">
+
+    <label>BS Date</label>
+    <input type="text" id="BSDATE"
+        placeholder="Select Nepali date">
+
+    <label>Custom Format</label>
+    <input type="text" id="CUSTOMDATE"
+        placeholder="DD/MM/YYYY">
+
+    <button type="button" onclick="openADPicker()">
+        Open AD Field Picker
+    </button>
+
+    <div class="output">
+        <div>Selected AD: <strong id="adResult">-</strong></div>
+        <div>Selected BS: <strong id="bsResult">-</strong></div>
+    </div>
+
+</div>
+
+<!-- Nepali Date Picker JS -->
+<script src="../dist/nepali-date-picker.js"></script>
+
+<script>
+
+    // AD output
+    NepaliDatePicker.init({
+        selector: "#ADDATE",
+        dateFormat: "yyyy-mm-dd",
+        returnFormat: "AD",
+        calendarType: "BS",
+
+        onSelect: function(data) {
+            console.log("AD:", data.adDate);
+            console.log("BS:", data.bsDate);
+
+            document.getElementById("adResult").textContent =
+                data.adDate;
+
+            document.getElementById("bsResult").textContent =
+                data.bsDate;
+        }
+    });
+
+    // BS output
+    NepaliDatePicker.init({
+        selector: "#BSDATE",
+        dateFormat: "yyyy-mm-dd",
+        returnFormat: "BS"
+    });
+
+    // Different output format
+    NepaliDatePicker.init({
+        selector: "#CUSTOMDATE",
+        dateFormat: "dd/mm/yyyy",
+        returnFormat: "AD"
+    });
+
+    function openADPicker() {
+        NepaliDatePicker.open("#ADDATE");
+    }
+
+    // Direct conversion examples
+    console.log(
+        NepaliDatePicker.BSToAD("2083-07-20")
+    );
+
+    console.log(
+        NepaliDatePicker.ADToBS("2026-11-05")
+    );
+
+</script>
+
+</body>
+</html>
+
