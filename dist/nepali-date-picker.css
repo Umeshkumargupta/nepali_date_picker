@@ -1,0 +1,223 @@
+
+/* =====================================
+   Nepali Date Picker - Main Styles
+   ===================================== */
+
+.ndp-input {
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.ndp-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(15, 30, 50, 0.48);
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    font-family: Arial, "Noto Sans Devanagari", sans-serif;
+}
+
+.ndp-overlay.ndp-visible {
+    display: flex;
+}
+
+.ndp-popup {
+    width: 100%;
+    max-width: 390px;
+    background: #fff;
+    border-radius: 13px;
+    overflow: hidden;
+    box-shadow: 0 15px 55px rgba(0, 0, 0, 0.2);
+    color: #17253a;
+    animation: ndp-appear 0.18s ease-out;
+}
+
+@keyframes ndp-appear {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header */
+
+.ndp-header {
+    background: #174a8b;
+    color: #fff;
+    padding: 15px 17px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ndp-header strong {
+    display: block;
+    font-size: 16px;
+}
+
+.ndp-header small {
+    display: block;
+    margin-top: 5px;
+    font-size: 11px;
+    opacity: 0.85;
+}
+
+.ndp-close {
+    background: transparent;
+    color: white;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* Month navigation */
+
+.ndp-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 17px;
+}
+
+.ndp-navigation strong {
+    font-size: 16px;
+    color: #174a8b;
+}
+
+.ndp-navigation button {
+    width: 34px;
+    height: 32px;
+    border: 1px solid #dce4ee;
+    background: #f4f7fb;
+    border-radius: 6px;
+    color: #174a8b;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.ndp-navigation button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Calendar grid */
+
+.ndp-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+    padding: 0 12px 14px;
+}
+
+.ndp-weekday {
+    text-align: center;
+    padding: 9px 0;
+    font-size: 11px;
+    font-weight: bold;
+    color: #64748b;
+}
+
+.ndp-sunday {
+    color: #c0392b;
+}
+
+.ndp-empty {
+    min-height: 47px;
+}
+
+.ndp-day {
+    min-height: 48px;
+    border: 1px solid transparent;
+    background: white;
+    border-radius: 7px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    color: #17253a;
+}
+
+.ndp-day span {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.ndp-day small {
+    font-size: 9px;
+    color: #8492a6;
+}
+
+.ndp-day:hover:not(:disabled) {
+    background: #edf4fc;
+    border-color: #b8cce5;
+}
+
+.ndp-day.ndp-selected {
+    background: #174a8b;
+    color: #fff;
+}
+
+.ndp-day.ndp-selected small {
+    color: #dceaff;
+}
+
+.ndp-day:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Footer */
+
+.ndp-footer {
+    padding: 12px 16px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: #68778c;
+}
+
+.ndp-today {
+    border: 0;
+    background: #eaf1fa;
+    color: #174a8b;
+    padding: 8px 13px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.ndp-today:hover {
+    background: #dce9f8;
+}
+
+/* Mobile */
+
+@media (max-width: 420px) {
+    .ndp-popup {
+        max-width: 100%;
+    }
+
+    .ndp-grid {
+        gap: 2px;
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+
+    .ndp-day {
+        min-height: 43px;
+    }
+}
